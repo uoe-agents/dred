@@ -1,0 +1,10 @@
+name: skew_cave
+template_path: minigrid_level_generation/data_generation/templates/Cave.png
+tile_size: 1
+pattern_width: 3
+rotations: 8
+output_periodic: false
+input_periodic: false
+loc_heuristic: entropy
+choice_heuristic: weighted
+backtracking: false

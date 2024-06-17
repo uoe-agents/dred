@@ -1,0 +1,33 @@
+name: cave_escape_8_4ts_varp
+path: change_me
+size: 8 # !(trainset only)
+batch_size: 4
+no_images: true
+val_data: test
+held_out_tasks:
+  [
+    obstacles_blackdots,
+    obstacles_hogs2,
+    obstacles_angular,
+    dungeon_mazescaled,
+    maze_simple,
+    rooms_fabric,
+    dungeon_rooms,
+    maze_knot,
+    skew_2,
+    skew_cave,
+    dungeon_spirals_neg,
+    maze_like,
+    maze_spirals,
+    dungeon_lessrooms,
+    rooms_magicoffice,
+    dungeon_,
+    skew_lake,
+    maze_,
+  ]
+data_type: 'graph'
+transforms: null
+gridworld_data_dim: [3,15,15]
+encoding: dense
+max_nodes: null #AUTO
+node_attributes: ["non_navigable", "navigable", "start", "goal", "moss", "lava", "wall", "empty"]

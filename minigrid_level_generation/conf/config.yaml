@@ -1,0 +1,39 @@
+hydra:
+  run:
+    # Configure output dir of each experiment programmatically from the arguments
+    # Example "outputs/mnist/classifier/baseline/2021-03-10-141516"
+    dir: outputs/${model.name}/${dataset.name}/${run_name}/${now:%Y-%m-%d_%H-%M-%S}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - accelerator
+          - model.name
+          - dataset.name
+          - dataset.data_type
+          - dataset.encoding
+          - run_name
+          - model
+    chdir: true
+
+# Global configurations shared between different modules
+run_name: change_me
+seed: 20211201
+accelerator: gpu
+num_devices: 1
+num_cpus: 0
+epochs: 200
+logging: false
+save_torch_checkpoint: true
+run_post_training_eval: false
+torch_checkpoint_dir: dred_pretrained_models
+
+defaults:
+  - dataset: cave_escape_512_4ts_varp
+  - model: res_graphVAE_ce
+  - optim: adam
+  - logger: res_graphVAE_ce
+  - _self_
+
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog

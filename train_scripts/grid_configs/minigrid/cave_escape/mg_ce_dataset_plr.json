@@ -1,0 +1,57 @@
+{
+  "grid" :{
+    "env_name":[
+      "MultiGrid-CaveEscapeGoalLastVariableBlocksAdversarialEnv-v0"
+    ],
+
+    "ued_algo": ["off"],
+    "num_processes": [36],
+    "num_env_steps": [265000000],
+    "num_steps": [256],
+    "ppo_epoch": [5],
+    "num_mini_batch":[1],
+    "handle_timelimits":[true],
+
+    "checkpoint_basis":["student_grad_updates"],
+    "archive_interval": [1000],
+
+    "lr": [1e-4],
+    "gamma": [0.995],
+    "entropy_coef": [0.0],
+    "adv_entropy_coef": [0.0],
+
+    "recurrent_arch": ["lstm"],
+    "recurrent_agent": [true],
+    "recurrent_adversary_env": [false],
+    "recurrent_hidden_size": [256],
+
+    "use_plr": [true],
+    "use_dataset": [true],
+    "level_replay_schedule": ["fixed"],
+    "train_full_distribution": [false],
+    "level_replay_prob": [1.0],
+    "level_replay_rho":[1.0],
+    "staleness_coef": [0.3],
+    "level_replay_seed_buffer_size":[512],
+    "level_replay_strategy": ["value_l1"],
+    "level_replay_score_transform": ["rank"],
+    "level_replay_temperature": [0.1],
+    "no_exploratory_grad_updates": [true],
+
+    "use_editor": [false],
+
+    "test_env_names": ["MultiGrid-DatasetEnv-v0"],
+    "dataset_path": ["datasets/cave_escape_512_4ts_varp"],
+
+    "log_dir": ["~/dcd_logs/plr_dataset"],
+    "log_interval": [25],
+    "weight_log_interval": [1000],
+    "log_action_complexity": [true],
+    "log_plr_buffer_stats": [true],
+    "log_replay_complexity": [true],
+    "reject_unsolvable_seeds": [false],
+    "screenshot_interval": [2500],
+
+    "checkpoint": [true]
+  }
+}

@@ -1,0 +1,173 @@
+name: cave_escape_8_4ts_varp_from_scratch
+dir_name: cave_escape_8_4ts_varp_from_scratch
+
+source_dataset: null #Specifies a source dataset to bootstrap generation from. If null, will generate dataset from scratch.
+train_batch_ids: null #Source train batch files to use if bootstrapping generation from a source dataset
+test_batch_ids: null #Source test batch files to use if bootstrapping generation from a source dataset
+
+# When not bootstrapping from a source dataset, specify which task structures to generate.
+task_structure_split: #How many train/test batches of data to generate for each task structure.
+                     obstacles_blackdots : 0
+                     obstacles_hogs2 : 0
+                     obstacles_hogs3 : 1
+                     obstacles_angular : 0
+                     dungeon_mazescaled : 0
+                     maze_wall : 1
+                     maze_simple : 0
+                     rooms_fabric : 0
+                     dungeon_rooms : 0
+                     maze_knot : 0
+                     maze_paths : 1
+                     rooms_office : 1
+                     skew_2 : 0
+                     skew_cave : 0
+                     dungeon_spirals_neg : 0
+                     maze_like : 0
+                     maze_spirals : 0
+                     dungeon_lessrooms : 0
+                     rooms_magicoffice : 0
+                     dungeon_ : 0
+                     skew_lake : 0
+                     maze_ : 0
+
+size_train_batch: 2 #Number of Minigrid levels generated in each train batch
+size_test_batch: 8 #Number of Minigrid levels generated in each train batch
+
+resume_generation: false #If true, will resume generation from the last saved batch
+generate_images: false #Generate and store renders for all layouts in the dataset. Set to false for large datasets to save disk space and avoid OOM errors.
+check_unique: true #Set true to check if generated layouts are unique across all batches, not recommended for large datasets due to performance reasons
+normalise_metrics: true #Set to true to ensure the shortest_path, resistance and navigable nodes metrics stored in label_descriptors are in [0,1]
+n_thumbnail_per_batch: 2 #Number of level renderings to generate in layouts.png per batch.
+
+data_type: graph # included for legacy reasons
+encoding: dense # included for legacy reasons
+ensure_connected: true #make sure all navigable tiles are reachable by the agent.
+gridworld_data_dim: [3,15,15] # [CxHxW] shape of minigrid level parameters generated (Note: the level parameters will be stored as [HxWxC], following the Minigrid convention).
+generating_algorithm: wave_function_collapse # Algorithm used to generate the levels, currently only supporting wave_function_collapse.
+task_type: cave_escape # Task type for the generated levels, currently supporting cave_escape and navigate_to_goal.
+seed: 123456 #Random seed for the generation process
+
+# additional metadata and metrics being stored in the dataset
+label_descriptors:
+  - task_structure
+  - shortest_path
+  - resistance
+  - navigable_nodes
+  - optimal_trajectories
+  - generating_algorithm
+  - seed
+  - minigrid
+  - images
+
+label_descriptors_config:
+  generating_algorithm: ${generating_algorithm}
+  task_structures: [ # Comments indicate the average time taken (in s.) to generate a 15x15 layout with the given structure
+                     dungeon_, #5.91
+                     dungeon_lessrooms, #2.21
+                     dungeon_rooms, #1.36
+                     dungeon_spirals_neg, #2.16
+                     dungeon_mazescaled, #0.22
+
+                     maze_, #13.27
+                     maze_knot, #1.16
+                     maze_like, #2.38
+                     maze_paths, #1.40
+                     maze_spirals, #2.11
+                     maze_wall, #0.11
+                     maze_simple, #0.15
+
+                     obstacles_blackdots, #0.10
+                     obstacles_hogs2, #0.14
+                     obstacles_hogs3, #0.48
+                     obstacles_angular, #0.52
+
+                     rooms_fabric, #0.38
+                     rooms_office, #1.67
+                     rooms_magicoffice, #.3.13
+
+                     skew_lake, #6.31
+                     skew_2, #1.92
+                     skew_cave, #1.59
+
+
+  ]
+  shortest_path:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null #Set automatically
+  resistance:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null #Set automatically
+  navigable_nodes:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null #Set automatically
+  num_optimal_trajectories: 1
+  use_seed: true
+
+graph_feature_descriptors:
+  - empty
+  - wall
+  - lava
+  - moss
+  - start
+  - goal
+  - navigable
+  - non_navigable
+
+# Edges configuration for graph encodings of the level parameters
+graph_edge_descriptors:
+  navigable:
+    between: [navigable]
+    structure: grid
+    weight: null
+  non_navigable:
+    between: [non_navigable]
+    structure: grid
+    weight: null
+  lava_goal:
+    between: [lava, goal]
+    structure: null
+    weight: lava_prob
+  moss_goal:
+    between: [moss, goal]
+    structure: null
+    weight: moss_prob
+  start_goal:
+    between: [start, goal]
+    structure: null
+    weight: null
+
+minigrid_feature_descriptors:
+  - empty
+  - wall
+  - lava
+  - moss
+  - start
+  - goal
+
+# generation parameters
+
+# lava tile distribution parameters.
+# With this configuration, lava tiles are more likely to be sampled when the shortest path distance to the goal gets larger.
+lava_distribution_params:
+  score_metric: shortest_path
+  score_transform: null #transform applied to the score
+  distribution: power_rank #power_rank or power
+  fraction: [0.1, 0.25] #range if randomised
+  temperature: 1 #range if randomised
+  sampling_depth: 3 # This prevents lava tiles from being generated out of view of the agent by restricting the sampling space to tiles close to the navigable area.
+  nodes: # which nodes to sample lava tiles on
+    - wall
+
+# moss tile distribution parameters
+# With this configuration, lava tiles are more likely to be sampled when the shortest path distance to the goal gets smaller.
+moss_distribution_params:
+  score_metric: shortest_path
+  score_transform: inverse #transform applied to the score
+  distribution: power_rank #power_rank or power
+  fraction: [0.1, 0.25] #range if randomised
+  temperature: 1 #range if randomised
+  nodes: # which nodes to sample moss tiles on
+    - empty

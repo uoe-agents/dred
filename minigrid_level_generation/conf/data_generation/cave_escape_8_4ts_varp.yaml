@@ -1,0 +1,167 @@
+name: cave_escape_8_4ts_varp
+dir_name: cave_escape_8_4ts_varp
+
+source_dataset: minigrid_dense_graph_1M #Specifies a source dataset to bootstrap generation from.
+train_batch_ids: ['batch_10', 'batch_25', 'batch_50', 'batch_55',] #Source train batch files to use if bootstrapping generation from a source dataset
+test_batch_ids: ['test_batch_10', 'test_batch_25', 'test_batch_50', 'test_batch_55',] #Source test batch files to use if bootstrapping generation from a source dataset
+
+task_structure_split:
+                     obstacles_blackdots : 0
+                     obstacles_hogs2 : 0
+                     obstacles_hogs3 : 1
+                     obstacles_angular : 0
+                     dungeon_mazescaled : 0
+                     maze_wall : 1
+                     maze_simple : 0
+                     rooms_fabric : 0
+                     dungeon_rooms : 0
+                     maze_knot : 0
+                     maze_paths : 1
+                     rooms_office : 1
+                     skew_2 : 0
+                     skew_cave : 0
+                     dungeon_spirals_neg : 0
+                     maze_like : 0
+                     maze_spirals : 0
+                     dungeon_lessrooms : 0
+                     rooms_magicoffice : 0
+                     dungeon_ : 0
+                     skew_lake : 0
+                     maze_ : 0
+
+size_train_batch: 2
+size_test_batch: 8
+
+resume_generation: false
+generate_images: false
+check_unique: true
+normalise_metrics: true
+n_thumbnail_per_batch: 2
+
+data_type: graph
+encoding: dense
+ensure_connected: true
+gridworld_data_dim: [3,15,15]
+generating_algorithm: wave_function_collapse
+task_type: cave_escape
+
+seed: 123456
+
+label_descriptors:
+  - task_structure
+  - shortest_path
+  - resistance
+  - navigable_nodes
+  - optimal_trajectories
+  - generating_algorithm
+  - seed
+  - minigrid
+  - images
+
+label_descriptors_config:
+  generating_algorithm: ${generating_algorithm}
+  task_structures: [
+                     dungeon_, #5.91
+                     dungeon_lessrooms, #2.21
+                     dungeon_rooms, #1.36
+                     dungeon_spirals_neg, #2.16
+                     dungeon_mazescaled, #0.22
+
+                     maze_, #13.27
+                     maze_knot, #1.16
+                     maze_like, #2.38
+                     maze_paths, #1.40
+                     maze_spirals, #2.11
+                     maze_wall, #0.11
+                     maze_simple, #0.15
+
+                     obstacles_blackdots, #0.10
+                     obstacles_hogs2, #0.14
+                     obstacles_hogs3, #0.48
+                     obstacles_angular, #0.52
+
+                     rooms_fabric, #0.38
+                     rooms_office, #1.67
+                     rooms_magicoffice, #.3.13
+
+                     skew_lake, #6.31
+                     skew_2, #1.92
+                     skew_cave, #1.59
+
+
+  ]
+  shortest_path:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null
+  resistance:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null
+  navigable_nodes:
+    min: 0.0
+    max: 1.0
+    normalisation_factor: null
+  num_optimal_trajectories: 1
+  use_seed: true
+
+graph_feature_descriptors:
+  - empty
+  - wall
+  - lava
+  - moss
+  - start
+  - goal
+  - navigable
+  - non_navigable
+
+graph_edge_descriptors:
+  navigable:
+    between: [navigable]
+    structure: grid
+    weight: null
+  non_navigable:
+    between: [non_navigable]
+    structure: grid
+    weight: null
+  lava_goal:
+    between: [lava, goal]
+    structure: null
+    weight: lava_prob
+  moss_goal:
+    between: [moss, goal]
+    structure: null
+    weight: moss_prob
+  start_goal:
+    between: [start, goal]
+    structure: null
+    weight: null
+
+minigrid_feature_descriptors:
+  - empty
+  - wall
+  - lava
+  - moss
+  - start
+  - goal
+
+# generation parameters
+
+lava_distribution_params:
+  score_metric: shortest_path
+  score_transform: null
+  distribution: power_rank
+  fraction: [0.1, 0.25]
+  temperature: 1
+  sampling_depth: 3
+  nodes:
+    - wall
+
+moss_distribution_params:
+  score_metric: shortest_path
+  score_transform: inverse
+  distribution: power_rank
+  fraction: [0.1, 0.25]
+  temperature: 1
+  nodes:
+    - empty

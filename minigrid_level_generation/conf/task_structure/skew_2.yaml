@@ -1,0 +1,10 @@
+name: skew_2
+template_path: minigrid_level_generation/data_generation/templates/Skew2.png
+tile_size: 1
+pattern_width: 3
+rotations: 8
+output_periodic: true
+input_periodic: true
+loc_heuristic: entropy
+choice_heuristic: weighted
+backtracking: false

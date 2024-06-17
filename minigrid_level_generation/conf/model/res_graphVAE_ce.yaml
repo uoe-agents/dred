@@ -1,0 +1,98 @@
+name: DenseGraphVAE
+_target_: minigrid_level_generation.model.graphVAE.LightningGraphVAE
+
+# these parameters should not change
+configuration:
+
+  shared_parameters:
+    latent_dim: 1024 #64
+    graph_max_nodes: ${dataset.max_nodes}
+    node_attributes: ${dataset.node_attributes}
+    batch_size: ${dataset.batch_size}
+    data_encoding: ${dataset.encoding}
+    gridworld_data_dim: ${dataset.gridworld_data_dim}
+    dropout: 0.0
+    use_batch_norm: true
+
+  model:
+    outputs: [
+      "loss",
+      "elbos",
+      "unweighted_elbos",
+      "neg_cross_entropy_Fx",
+      "kld",
+      "logits_heads",
+      "logits_Fx",
+      "std",
+      "mean",
+    ]
+    accelerator: ${accelerator}
+    gradient_type: pathwise
+    num_variational_samples: 1
+    augmented_inputs: false
+    augmented_transforms: null
+
+  encoder:
+    attributes: ["lava", "moss", "wall", "empty", "start", "goal"]
+    gnn:
+      architecture: GIN
+      num_layers: 4
+      layer_dim: 12
+      num_mlp_layers: 2
+      learn_eps: true
+      graph_pooling: mean
+      neighbor_pooling: sum
+
+    mlp:
+      num_layers: 1
+      hidden_dim: 2048
+      bottleneck_dim: 256
+      batch_norm_output_layer: true
+      dropout_output_layer: false
+
+  decoder:
+    attributes: ["lava", "moss", "wall", "empty", "start", "goal"]
+    distributions:
+      layout:
+        family: one_hot_categorical
+        domain: node
+        attributes: ["lava", "moss", "wall", "empty"]
+        condition_on: null #Set to null to directly condition on decoder output
+        #Possible choices:
+        # - mask (mask invalid nodes + renormalise logits after output layer), data, null
+        # - data (condition on data specified in condition_on at input layer)
+        # - null (no conditioning)
+        conditioning_transform: null
+        masked_attributes: null
+      goal_location:
+        family: one_hot_categorical
+        domain: nodeset
+        attributes: [ "goal" ] #Only a single attribute allowed if domain is nodeset
+        condition_on: ["layout"]
+        conditioning_transform: "mask" #Possible choices: mask, data, null
+        masked_attributes: [["lava", "wall"],]
+      start_location:
+        family: one_hot_categorical
+        domain: nodeset
+        attributes: ["start"] #Only a single attribute allowed if domain is nodeset
+        condition_on: ["layout", "goal_location"]
+        conditioning_transform: "mask" #Possible choices: mask, data, null
+        masked_attributes: [["lava", "wall"], ["goal"],]
+    attribute_masking: always #[null, always, gen_only]
+    architecture: MLP
+    num_layers: 2 #not counting the final multihead layer
+    bottleneck_dim: 256 #not counting the final multihead layer
+    hidden_dim: 256 #not counting the final multihead layer
+    batch_norm_output_layer: true
+    dropout_output_layer: false
+
+# these can change between runs
+hyperparameters:
+  loss:
+    elbo_coeffs:
+      Fx:
+        layout: 0.04
+        goal_location: 0.013
+        start_location: ${model.hyperparameters.loss.elbo_coeffs.Fx.goal_location}
+      beta: 0.0448
+      predictor: 0.

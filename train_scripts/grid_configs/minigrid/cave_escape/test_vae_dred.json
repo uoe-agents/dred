@@ -1,0 +1,72 @@
+{
+  "grid" :{
+    "env_name":[
+      "MultiGrid-GoalLastVariableBlocksAdversarialEnv-v0"
+    ],
+
+    "ued_algo": ["dred"],
+    "num_processes": [6],
+    "num_env_steps": [25000],
+    "num_steps": [256],
+    "ppo_epoch": [5],
+    "num_mini_batch":[1],
+    "handle_timelimits":[true],
+
+    "checkpoint_basis":["student_grad_updates"],
+    "archive_interval": [2],
+
+    "lr": [1e-4],
+    "gamma": [0.995],
+    "entropy_coef": [0.0],
+    "adv_entropy_coef": [0.0],
+
+    "recurrent_arch": ["lstm"],
+    "recurrent_agent": [true],
+    "recurrent_adversary_env": [false],
+    "recurrent_hidden_size": [256],
+
+    "use_plr": [true],
+    "use_dataset": [true],
+    "level_replay_schedule": ["fixed"],
+    "level_replay_prob": [1.0],
+    "staleness_coef": [0.3],
+    "staleness_support": ["dataset_levels"],
+    "level_replay_seed_buffer_size":[36],
+    "level_replay_strategy": ["value_l1"],
+    "level_replay_strategy_support": ["dataset_levels"],
+    "level_replay_score_transform": ["rank"],
+    "level_replay_temperature": [0.1],
+    "level_replay_secondary_strategy": ["grounded_value_l1"],
+    "level_replay_secondary_strategy_support": ["buffer"],
+    "level_replay_secondary_score_transform": ["rank"],
+    "level_replay_secondary_temperature": [1.0],
+    "level_replay_secondary_strategy_coef_end": [1.0],
+    "no_exploratory_grad_updates": [true],
+
+    "use_editor": [true],
+    "level_editor_prob": [1.0],
+    "level_editor_method": ["generative_model"],
+    "generative_model_path": ["dred_pretrained_models/vae_dred.pt"],
+    "interpolation_scheme": ["polar"],
+    "fixed_point_interpolation": [false],
+    "num_level_pairs_for_interpolation": [2],
+    "interpolations_per_pair": [4],
+    "include_endpoints_in_interpolation": [true],
+
+    "test_env_names": ["MultiGrid-DatasetEnv-v0"],
+    "dataset_path": ["datasets/cave_escape_8_4ts_varp"],
+
+    "log_dir": ["~/dcd_logs/test_vae_dred"],
+    "log_interval": [1],
+    "weight_log_interval": [2],
+    "log_action_complexity": [true],
+    "log_plr_buffer_stats": [true],
+    "log_replay_complexity": [true],
+    "reject_unsolvable_seeds": [false],
+    "screenshot_interval": [2],
+    "test_num_episodes_final": [10],
+
+    "checkpoint": [true],
+    "verbose": [true]
+  }
+}
