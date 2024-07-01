@@ -6,14 +6,14 @@
 
     "ued_algo": ["dred"],
     "num_processes": [6],
-    "num_env_steps": [25000],
+    "num_env_steps": [200000],
     "num_steps": [256],
     "ppo_epoch": [5],
     "num_mini_batch":[1],
     "handle_timelimits":[true],
 
     "checkpoint_basis":["student_grad_updates"],
-    "archive_interval": [2],
+    "archive_interval": [20],
 
     "lr": [1e-4],
     "gamma": [0.995],
@@ -31,7 +31,7 @@
     "level_replay_prob": [1.0],
     "staleness_coef": [0.3],
     "staleness_support": ["dataset_levels"],
-    "level_replay_seed_buffer_size":[36],
+    "level_replay_seed_buffer_size":[600],
     "level_replay_strategy": ["value_l1"],
     "level_replay_strategy_support": ["dataset_levels"],
     "level_replay_score_transform": ["rank"],
@@ -46,7 +46,7 @@
     "use_editor": [true],
     "level_editor_prob": [1.0],
     "level_editor_method": ["generative_model"],
-    "generative_model_path": ["dred_pretrained_models/vae_dred.pt"],
+    "generative_model_path": ["dred_pretrained_models/dred_pretrained_vae.pt"],
     "interpolation_scheme": ["polar"],
     "fixed_point_interpolation": [false],
     "num_level_pairs_for_interpolation": [2],
@@ -54,7 +54,7 @@
     "include_endpoints_in_interpolation": [true],
 
     "test_env_names": ["MultiGrid-DatasetEnv-v0"],
-    "dataset_path": ["datasets/cave_escape_8_4ts_varp"],
+    "dataset_path": ["datasets/cave_escape_512_4ts_varp"],
 
     "log_dir": ["~/dcd_logs/test_vae_dred"],
     "log_interval": [1],

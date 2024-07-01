@@ -47,7 +47,7 @@
     "use_editor": [true],
     "level_editor_prob": [1.0],
     "level_editor_method": ["generative_model"],
-    "generative_model_path": ["dred_pretrained_models/vae_dred.pt"],
+    "generative_model_path": ["dred_pretrained_models/dred_pretrained_vae.pt"],
     "interpolation_scheme": ["polar"],
     "fixed_point_interpolation": [false],
     "num_level_pairs_for_interpolation": [6],
