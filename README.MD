@@ -60,7 +60,7 @@ Alternatively, we provide the option to download the datasets and the VAE model 
 - Download at least one of the datasets from our [Minigrid dataset repository](https://datashare.ed.ac.uk/handle/10283/8808). The dataset used to train the agent in our publication is the `cave_escape_512_4ts_varp` 
   dataset. Unzip the `.zip` archive and place the resulting `cave_escape_512_4ts_varp` folder in the `datasets` 
   directory.
-- The pre-trained VAE model can be obtained from our [DRED data repository](https://datashare.ed.ac.uk/handle/10283/8807). Download 
+- The pre-trained VAE model can be obtained from our [DRED data repository](https://datashare.ed.ac.uk/handle/10283/8819). Download 
   the 
   `dred_pretrained_vae.zip` archive, unzip its contents and place the resulting `dred_pretrained_vae.pt` checkpoint in the 
   `dred_pretrained_models` directory. This model is meant to be paired with the `cave_escape_512_4ts_varp` 
@@ -322,7 +322,7 @@ python -m eval_dataset \
 
 ## Additional resources
 - [Our MiniGrid dataset repository](https://datashare.ed.ac.uk/handle/10283/8808) contains several MiniGrid datasets.
-- [Our DRED data repository](https://datashare.ed.ac.uk/handle/10283/8807) contains the experiment logs and the 
+- [Our DRED data repository](https://datashare.ed.ac.uk/handle/10283/8819) contains the experiment logs and the 
   plotting code 
   used to generate figures in [Garcin et 
   al, 2024](https://arxiv.org/abs/2402.03479). It also contains the VAE model weights for VAE-DRED and model 
